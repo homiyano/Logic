@@ -8,17 +8,15 @@ other(o, x).
 % --- board c(Row,Col) 1..3 ---
 cell(c(R,C)) :- between(1,3,R), between(1,3,C).
 
-state([mark(c(1,1),x), mark(c(2,2),o)], x).
-
 initial_state(state([], x)).
 
 % true if cell is occupied in board
-occipied(Board, Cell) :- member(mark(Cell,_), Board).
+occupied(Board, Cell) :- member(mark(Cell,_), Board).
 
 % true if cell is empty in board
 empty(Board, Cell) :-
     cell(Cell),
-    \+ occipied(Board, Cell).
+    \+ occupied(Board, Cell).
 
 % legal move
 legal_move(state(Board, Turn), Cell, Turn) :-
@@ -58,9 +56,11 @@ full(Board) :-
     \+ (cell(Cell), empty(Board, Cell)).
 
 game_over(State) :-
-    wins(State, x);
-    wins(State, o);
-    State = state(Board,_), full(Board).
+    (   wins(State, x)
+    ;   wins(State, o)
+    ;   State = state(Board,_),
+        full(Board)
+    ).
 
 % draw
 draw(state(Board,_)) :-
@@ -73,7 +73,8 @@ legal_moves(state(Board, Turn), Moves) :-
     findall(Cell, (cell(Cell), empty(Board, Cell)), Moves),
     player(Turn).
 
-play_moves(State. [], State).
+play_moves(State, [], State).
+
 play_moves(State, [Cell|Rest], FinalState) :-
     make_move(State, Cell, Next),
     play_moves(Next, Rest, FinalState).
