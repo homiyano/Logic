@@ -51,7 +51,7 @@ has_mark(Board, Cell, Player) :-
 wins(state(Board,_), Player) :-
     player(Player),
     line(Cells),
-    forall(member(C, Cells), has_mark(Board, C, Player)).
+    forall(member(C, Cells), has_mark(Board, C,  Player)).
 
 % game over
 full(Board) :-
